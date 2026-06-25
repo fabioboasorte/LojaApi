@@ -1,0 +1,16 @@
+global using LojaApi.Models;
+global using LojaApi.Services;
+global using LojaApi.Data;
+global using LojaApi.Exceptions;
+global using LojaApi.Middleware;
+global using LojaApi.Models.DTOs;
+global using System.Net;
+global using System.Text.Json;
+global using Microsoft.AspNetCore.Mvc;
+global using System.ComponentModel.DataAnnotations;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.IdentityModel.Tokens;
+global using Microsoft.AspNetCore.Authorization;
+global using System.Text;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using System.Text.Json.Serialization;
