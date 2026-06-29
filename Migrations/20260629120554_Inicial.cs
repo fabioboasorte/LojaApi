@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -16,9 +17,9 @@ namespace LojaApi.Migrations
                 name: "Categorias",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nome = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,12 +30,12 @@ namespace LojaApi.Migrations
                 name: "Produtos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nome = table.Column<string>(type: "TEXT", nullable: false),
-                    Preco = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Marca = table.Column<string>(type: "TEXT", nullable: false),
-                    SKU = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(type: "text", nullable: false),
+                    Preco = table.Column<decimal>(type: "numeric", nullable: false),
+                    Marca = table.Column<string>(type: "text", nullable: false),
+                    SKU = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,8 +46,8 @@ namespace LojaApi.Migrations
                 name: "CategoriaProduto",
                 columns: table => new
                 {
-                    CategoriasId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ProdutosId = table.Column<int>(type: "INTEGER", nullable: false)
+                    CategoriasId = table.Column<int>(type: "integer", nullable: false),
+                    ProdutosId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {

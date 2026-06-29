@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LojaApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260629120159_AtualizacaoModelo")]
-    partial class AtualizacaoModelo
+    [Migration("20260629120554_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
