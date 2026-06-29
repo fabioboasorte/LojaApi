@@ -3,7 +3,7 @@
 API REST completa para gerenciamento de produtos e categorias, construída com **C# .NET** e deployada em produção.
 
 🔗 **[lojaapi-production.up.railway.app](https://lojaapi-production.up.railway.app)**  
-👤 **[LinkedIn — Fabio Boasorte](https://www.linkedin.com/in/fabioboasorte/)**
+👤 **[LinkedIn — Fabio Boa Sorte](https://www.linkedin.com/in/fabioboasorte/)**
 
 ---
 
@@ -21,9 +21,10 @@ API REST completa para gerenciamento de produtos e categorias, construída com *
 
 ## 📦 Funcionalidades
 
-- ✅ CRUD completo de **Produtos**
+- ✅ CRUD completo de **Produtos** (com SKU)
 - ✅ CRUD completo de **Categorias**
 - ✅ Relacionamento **ManyToMany** entre Produtos e Categorias
+- ✅ **Paginação** nos resultados
 - ✅ **Autenticação JWT** com roles (Admin)
 - ✅ **Validação** de dados com Data Annotations
 - ✅ **Tratamento de erros** centralizado via Middleware
@@ -55,7 +56,8 @@ LojaApi/
 │   └── DTOs/
 │       ├── CriarProdutoDto.cs
 │       ├── AtualizarProdutoDto.cs
-│       └── AtualizarCategoriaDto.cs
+│       ├── AtualizarCategoriaDto.cs
+│       └── PaginacaoDto.cs
 ├── Services/
 │   ├── IProdutoService.cs
 │   ├── ProdutoService.cs
@@ -143,7 +145,7 @@ Authorization: Bearer {seu_token}
 
 | Método | Rota | Descrição | Auth |
 |--------|------|-----------|------|
-| GET | `/api/produtos` | Lista todos os produtos | ❌ |
+| GET | `/api/produtos` | Lista produtos com paginação | ❌ |
 | GET | `/api/produtos/{id}` | Busca produto por ID | ❌ |
 | POST | `/api/produtos` | Cria um produto | ✅ |
 | PUT | `/api/produtos/{id}` | Atualiza um produto | ✅ |
@@ -163,6 +165,33 @@ Authorization: Bearer {seu_token}
 
 ## 📋 Exemplos de uso
 
+### Listar produtos com paginação
+
+```http
+GET /api/produtos?pagina=1&tamanhoPagina=10
+```
+
+```json
+{
+  "pagina": 1,
+  "totalPaginas": 1,
+  "totalItens": 3,
+  "itens": [
+    {
+      "id": 1,
+      "nome": "Notebook",
+      "preco": 3500.0,
+      "marca": "Dell",
+      "sku": "SKNOTE11909",
+      "categorias": [
+        { "id": 1, "nome": "Informática" },
+        { "id": 3, "nome": "Notebooks" }
+      ]
+    }
+  ]
+}
+```
+
 ### Criar produto
 
 ```http
@@ -173,23 +202,9 @@ Content-Type: application/json
 {
   "nome": "Notebook Gamer",
   "marca": "Dell",
+  "sku": "SKNOTE11909",
   "preco": 5000.00,
   "categoriaIds": [1, 2]
-}
-```
-
-### Resposta
-
-```json
-{
-  "id": 1,
-  "nome": "Notebook Gamer",
-  "preco": 5000.00,
-  "marca": "Dell",
-  "categorias": [
-    { "id": 1, "nome": "Informática" },
-    { "id": 2, "nome": "Notebooks" }
-  ]
 }
 ```
 
@@ -212,18 +227,20 @@ Content-Type: application/json
 
 ## 🧪 Testes
 
-9 testes cobrindo os cenários críticos do `ProdutoService`:
+11 testes cobrindo os cenários críticos do `ProdutoService`:
 
 ```
-Total: 9 | Passou: 9 | Falhou: 0 | Duração: ~0.6s
+Total: 11 | Passou: 11 | Falhou: 0 | Duração: ~0.6s
 ```
 
 | Teste | Cenário |
 |-------|---------|
 | `GetAll_DeveRetornarTodosProdutos` | Lista produtos corretamente |
-| `GetById_ProdutoExistente_DeveRetornarProduto` | Busca por ID existente |
+| `GetAll_DevePaginarCorretamente` | Paginação retorna página e total corretos |
+| `GetAll_SegundaPagina_DeveRetornarItemRestante` | Segunda página retorna itens restantes |
+| `GetById_ProdutoExistente_DeveRetornarProduto` | Busca por ID existente incluindo SKU |
 | `GetById_ProdutoInexistente_DeveLancarExcecao` | Lança exceção para ID inválido |
-| `Create_DeveSalvarERetornarProduto` | Cria e persiste produto |
+| `Create_DeveSalvarERetornarProduto` | Cria e persiste produto com SKU |
 | `Update_ProdutoExistente_DeveAtualizarDados` | Atualiza dados corretamente |
 | `Update_ProdutoInexistente_DeveLancarExcecao` | Lança exceção para ID inválido |
 | `Delete_ProdutoExistente_DeveRemoverProduto` | Remove produto corretamente |
