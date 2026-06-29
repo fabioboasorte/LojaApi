@@ -3,10 +3,12 @@ namespace LojaApi.Services;
 public class ProdutoService : IProdutoService
 {
     private readonly AppDbContext _context;
+    private readonly ILogger<ProdutoService> _logger;
 
-    public ProdutoService(AppDbContext context)
+    public ProdutoService(AppDbContext context, ILogger<ProdutoService> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public List<Produto> GetAll() =>
@@ -35,6 +37,7 @@ public class ProdutoService : IProdutoService
 
         _context.Produtos.Add(produto);
         _context.SaveChanges();
+        _logger.LogInformation("Produto criado: {Id} - {Nome}", produto.Id, produto.Nome);
         return produto;
     }
 
@@ -56,6 +59,24 @@ public class ProdutoService : IProdutoService
 
         _context.SaveChanges();
         return produto;
+    }
+
+    public PaginacaoDto<Produto> GetAll(int pagina = 1, int tamanhoPagina = 10)
+    {
+        var total = _context.Produtos.Count();
+        var itens = _context.Produtos
+            .Include(p => p.Categorias)
+            .Skip((pagina - 1) * tamanhoPagina)
+            .Take(tamanhoPagina)
+            .ToList();
+
+        return new PaginacaoDto<Produto>
+        {
+            Pagina = pagina,
+            TotalPaginas = (int)Math.Ceiling(total / (double)tamanhoPagina),
+            TotalItens = total,
+            Itens = itens
+        };
     }
 
     public bool Delete(int id)

@@ -15,7 +15,8 @@ public class ProdutosController : ControllerBase
 
     [HttpGet]
     [AllowAnonymous]
-    public IActionResult GetAll() => Ok(_service.GetAll());
+    public IActionResult GetAll([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 10) =>
+        Ok(_service.GetAll(pagina, tamanhoPagina));
 
     [HttpGet("{id}")]
     [AllowAnonymous]

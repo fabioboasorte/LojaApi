@@ -1,17 +1,15 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using LojaApi.Models;
-
 namespace LojaApi.Services;
 
 public class AuthService : IAuthService
 {
-    // usuário fixo por enquanto — no Dia 8 vem do banco
     private const string UsuarioValido = "admin";
     private const string SenhaValida = "123456";
-    private const string ChaveSecreta = "chave-super-secreta-minimo-32-caracteres!";
+    private readonly IConfiguration _config;
+
+    public AuthService(IConfiguration config)
+    {
+        _config = config;
+    }
 
     public string? Login(LoginRequest request)
     {
@@ -23,7 +21,8 @@ public class AuthService : IAuthService
 
     private string GerarToken(string usuario)
     {
-        var chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ChaveSecreta));
+        var chave = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(_config["Jwt:ChaveSecreta"]!));
         var credenciais = new SigningCredentials(chave, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
@@ -33,8 +32,8 @@ public class AuthService : IAuthService
         };
 
         var token = new JwtSecurityToken(
-            issuer: "LojaApi",
-            audience: "LojaApi",
+            issuer: _config["Jwt:Issuer"],
+            audience: _config["Jwt:Audience"],
             claims: claims,
             expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: credenciais

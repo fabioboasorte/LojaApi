@@ -25,10 +25,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "LojaApi",
-            ValidAudience = "LojaApi",
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("chave-super-secreta-minimo-32-caracteres!"))
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:ChaveSecreta"]!))
         };
     });
 
