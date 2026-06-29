@@ -209,6 +209,5 @@ FakesAssemblies/
 # JetBrains Rider
 *.sln.iml
 
-Migrations/
 loja.db
 appsettings.Development.json
